@@ -98,6 +98,9 @@ func validator(fieldName string, value reflect.Value, rule string, req string, m
 			break
 		case "email":
 			err = validRegexp(fieldName, value, messages, emailPattern, constantMessage["email"])
+			break
+		case "notEmpty":
+			err = validRegexp(fieldName, value, messages, emailPattern, constantMessage["email"])
 			// case "image":
 			// 	_ = validImage(fieldName, value, messages)
 		}
@@ -141,6 +144,15 @@ func validIntegerLessThan(fieldName string, value reflect.Value, requirement str
 	numRequirement, err := strconv.Atoi(requirement)
 	if err != nil || num < numRequirement {
 		(*messages)[fieldName] = fmt.Sprintf(constantMessage["lt"], requirement)
+		return
+	}
+	return
+}
+
+func validNotEmptyThan(fieldName string, value reflect.Value, messages *map[string]string) (err error) {
+	text := reflectValueToString(value)
+	if text != "" {
+		(*messages)[fieldName] = fmt.Sprintf(constantMessage["notEmpty"], fieldName)
 		return
 	}
 	return
